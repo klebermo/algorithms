@@ -1,35 +1,36 @@
 #ifndef LIB_EDGE_H
 #define LIB_EDGE_H
 
-#include "vertex.h"
+#include <map>
+
+typedef struct Direction {
+  float weight;
+  float angle;
+};
+
+template<class T> class Vertex;
+
+const float PI = 3.14159265359f;
+
+float to_rad(float value) {
+  return (value * PI) / 180.0f;
+}
 
 template<class T>
 class Edge {
 private:
-  int weight;
-  float angle;
-  Vertex<T> destination;
+  std::map<Direction, Vertex<T>> vertices;
 public:
   Edge();
   ~Edge();
 
-  T getWeight();
-  void setWeight(T value);
-
-  float getAngle();
-  void setAngle(float value);
-
-  Vertex<T> getDestination();
-  void setDestination(Vertex<T> value);
-
-  friend std::ostream& operator<<(std::ostream& output, const Edge<T>& e) { output << e.destination; return output; };
+  std::map<Direction, Vertex<T>> getVertices();
+  void setVertices(std::map<Direction, Vertex<T>> values);
 };
 
 template<class T>
 Edge<T>::Edge() {
-  this->weight = 0;
-  this->angle = 0.f;
-  this->destination = Vertex<T>();
+  //
 }
 
 template<class T>
@@ -38,35 +39,13 @@ Edge<T>::~Edge() {
 }
 
 template<class T>
-T Edge<T>::getWeight() {
-  return this->weight;
+std::map<Direction, Vertex<T>> Edge<T>::getVertices() {
+  return this->vertices;
 }
 
 template<class T>
-void Edge<T>::setWeight(T value) {
-  this->weight = value;
-}
-
-template<class T>
-float Edge<T>::getAngle() {
-  return this->angle;
-}
-
-template<class T>
-void Edge<T>::setAngle(float value) {
-  this->angle = value;
-}
-
-template<class T>
-Vertex<T> Edge<T>::getDestination() {
-  return this->destination;
-}
-
-template<class T>
-void Edge<T>::setDestination(Vertex<T> value) {
-  this->destination.setData(value.getData());
-  this->destination.setCoordenates(value.getCoordenates());
-  this->destination.setEdges(value.getEdges());
+void Edge<T>::setVertices(std::map<Direction, Vertex<T>> values) {
+  this->vertices = values;
 }
 
 #endif  // LIB_EDGE_H

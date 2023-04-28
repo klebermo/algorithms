@@ -5,15 +5,10 @@
 
 template<class T> class Edge;
 
-struct Coordenate {
-  float x, y;
-} typedef Coordenate;
-
 template<class T>
 class Vertex {
 private:
   T data;
-  Coordenate coordenate;
   List<Edge<T>> * edges;
 public:
   Vertex();
@@ -22,20 +17,17 @@ public:
   T getData();
   void setData(T value);
 
-  Coordenate getCoordenates();
-  void setCoordenates(Coordenate value);
-
   List<Edge<T>> * getEdges();
   void setEdges(List<Edge<T>> * values);
 
-  bool operator==(Vertex<T> other) { return this->getData() == other.getData(); }
-  friend std::ostream& operator<<(std::ostream& output, const Vertex<T>& e) { output << e.data; return output; };
+  bool operator==(const Vertex<T> & other) const {
+    return this->data == other.data;
+  }
 };
 
 template<class T>
 Vertex<T>::Vertex() {
   this->data = T();
-  this->coordenate = Coordenate();
   this->edges = new List<Edge<T>>();
 }
 
@@ -52,17 +44,6 @@ T Vertex<T>::getData() {
 template<class T>
 void Vertex<T>::setData(T value) {
   this->data = value;
-}
-
-template<class T>
-Coordenate Vertex<T>::getCoordenates() {
-  return this->coordenate;
-}
-
-template<class T>
-void Vertex<T>::setCoordenates(Coordenate value) {
-  this->coordenate.x = value.x;
-  this->coordenate.y = value.y;
 }
 
 template<class T>

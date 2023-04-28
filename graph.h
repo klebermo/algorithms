@@ -1,6 +1,7 @@
 #ifndef LIB_GRAPH_H
 #define LIB_GRAPH_H
 
+#include "list.h"
 #include "edge.h"
 
 template<class T>
@@ -21,6 +22,7 @@ public:
   void remove_edge(T x, T y);
 
   List<Vertex<T>> search(T origin, T destination);
+
   Vertex<T> get_vertex(T x);
   Edge<T> get_edge(T x, T y);
 };
@@ -110,10 +112,16 @@ Edge<T> Graph<T>::get_edge(T x, T y) {
   Vertex<T> vx = get_vertex(x);
   Vertex<T> vy = get_vertex(y);
 
-  for(int i=1; i<vx.getEdges()->size(); i++) {
-    Edge<T> e =vx.getEdges()->get(i)->getData();
-    if(e.getDestination() == vy) return e;
+  List<Edge<T>> * edges = vx.getEdges();
+  for(int i=1; i<edges->size(); i++) {
+    Edge<T> e = edges->get(i)->getData();
+    for(auto i=edges->begin(); i!=edges->end(); i++) {
+      Vertex<T> v = i->second();
+      if(v == vy) return e;
+    }
   }
+
+  return nullptr;
 }
 
 #endif  // LIB_GRAPH_H

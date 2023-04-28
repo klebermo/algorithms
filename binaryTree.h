@@ -1,6 +1,7 @@
 #ifndef LIB_BINARY_TREE_H
 #define LIB_BINARY_TREE_H
 
+#include "list.h"
 #include "node_tree.h"
 
 template<class T>
