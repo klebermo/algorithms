@@ -12,6 +12,7 @@ private:
   List<Edge<T>> * edges;
 public:
   Vertex();
+  Vertex(T value);
   ~Vertex();
 
   T getData();
@@ -23,11 +24,33 @@ public:
   bool operator==(const Vertex<T> & other) const {
     return this->data == other.data;
   }
+
+  bool operator<(const Vertex<T> & other) const {
+    return this->data < other.data;
+  }
+
+  bool operator>(const Vertex<T> & other) const {
+    return this->data > other.data;
+  }
+
+  bool operator<=(const Vertex<T> & other) const {
+    return this->data <= other.data;
+  }
+
+  bool operator>=(const Vertex<T> & other) const {
+    return this->data >= other.data;
+  }
 };
 
 template<class T>
 Vertex<T>::Vertex() {
   this->data = T();
+  this->edges = new List<Edge<T>>();
+}
+
+template<class T>
+Vertex<T>::Vertex(T value) {
+  this->data = value;
   this->edges = new List<Edge<T>>();
 }
 

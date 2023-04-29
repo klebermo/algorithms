@@ -18,7 +18,7 @@ public:
   void add_vertex(T x);
   void remove_vertex(T x);
 
-  void add_edge(T x, T y);
+  void add_edge(T x, T y, int weight = 1, float angle = 1.0f);
   void remove_edge(T x, T y);
 
   List<Vertex<T>> search(T origin, T destination);
@@ -39,13 +39,17 @@ Graph<T>::~Graph() {
 
 template<class T>
 bool Graph<T>::adjacent(T x, T y) {
-  Vertex vx = get_vertex(x);
-  Vertex vy = get_vertex(y);
+  Vertex<T> vx = get_vertex(x);
+  Vertex<T> vy = get_vertex(y);
 
   int max = vx.getEdges()->size();
-  for(int i=1; i<=max; i++)
-    if(vx.getEdges()->get(i)->getData().getDestination() == vy)
-      return true;
+  for(int i=1; i<=max; i++) {
+    Edge<T> e = vx.getEdges()->get(i)->getData();
+    for(auto j : e.getVertices()) {
+      Vertex<T> v = j.second;
+      if(v == vy) return true;
+    }
+  }
 
   return false;
 }
@@ -54,10 +58,15 @@ template<class T>
 List<Vertex<T>> Graph<T>::neighbors(T x) {
   List<Vertex<T>> result;
 
-  Vertex vx = get_vertex(x);
+  Vertex<T> vx = get_vertex(x);
   int max = vx.getEdges()->size();
-  for(int i=1; i<=max; i++)
-    result.insert(vx.getEdges()->get(i)->getData().getDestination());
+  for(int i=1; i<=max; i++) {
+    Edge<T> e = vx.getEdges()->get(i)->getData();
+    for(auto j : e.getVertices()) {
+      Vertex<T> v = j.second;
+      result.insert(v);
+    }
+  }
 
   return result;
 }
@@ -74,26 +83,31 @@ void Graph<T>::remove_vertex(T x) {
 }
 
 template<class T>
-void Graph<T>::add_edge(T x, T y) {
-  Vertex vx = get_vertex(x);
-  Vertex vy = get_vertex(y);
+void Graph<T>::add_edge(T x, T y, int weight, float angle) {
+  Vertex<T> vx = get_vertex(x);
+  Vertex<T> vy = get_vertex(y);
 
-  Edge<T> e1(1, 1.3f, vy);
+  Edge<T> e1(weight, angle, vy);
   vx.getEdges()->insert(e1);
 
-  Edge<T> e2(2, 1.4f, vx);
+  Edge<T> e2(weight, angle, vx);
   vy.getEdges()->insert(e2);
 }
 
 template<class T>
 void Graph<T>::remove_edge(T x, T y) {
-  Vertex vx = get_vertex(x);
-  Vertex vy = get_vertex(y);
+  Vertex<T> vx = get_vertex(x);
+  Vertex<T> vy = get_vertex(y);
 
   int max = vx.getEdges()->size();
-  for(int i=1; i<max; i++)
-    if(vx.getEdges()->get(i)->getData().getDestination() == vy)
-      vx.getEdges()->remove(i);
+  for(int i=1; i<max; i++) {
+    Edge<T> e = vx.getEdges()->get(i)->getData();
+    for(auto j : e.getVertices()) {
+      Vertex<T> v = j->second;
+      if(v == vy)
+        vx.getEdges()->remove(i);
+    }
+  }
 }
 
 template<class T>
@@ -115,8 +129,8 @@ Edge<T> Graph<T>::get_edge(T x, T y) {
   List<Edge<T>> * edges = vx.getEdges();
   for(int i=1; i<edges->size(); i++) {
     Edge<T> e = edges->get(i)->getData();
-    for(auto i=edges->begin(); i!=edges->end(); i++) {
-      Vertex<T> v = i->second();
+    for(auto j : e.getVertices()) {
+      Vertex<T> v = j->second;
       if(v == vy) return e;
     }
   }

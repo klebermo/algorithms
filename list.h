@@ -20,7 +20,7 @@ public:
   void set(int index, NodeList<T> * value);
   int find(T data);
   void sort();
-  //void print();
+  void print();
   T * toArray();
 };
 
@@ -174,13 +174,13 @@ void List<T>::sort() {
   }
 }
 
-/*template<class T>
+template<class T>
 void List<T>::print() {
-  cout << "{ ";
+  std::cout << "{ ";
   for(int i=1; i<=this->size(); i++)
-    cout << this->get(i)->getData() << " ";
-  cout << "}";
-}*/
+    std::cout << this->get(i)->getData() << " ";
+  std::cout << "}";
+}
 
 template<class T>
 T * List<T>::toArray() {
